@@ -43,7 +43,7 @@ Predstavte si, že pracujete pre e-commerce spoločnosť, ktorá predáva produk
    - FK: väzby podľa kategórií, regiónov, zákazníkov, objednávok a produktov  
 
 5. **ER diagram**
-   - Diagram bol vytvorený na platforme [dbdiagram.io](https://dbdiagram.io/). Do repozitára vložím aj kód ([`oltp.sql`]()) a pridám screenshot schémy dole.
+   - Diagram bol vytvorený na platforme [dbdiagram.io](https://dbdiagram.io/). Do repozitára vložím aj kód ([`oltp.sql`](https://github.com/DariiaSira/CaseStudyDataAnalyst--GymBeam/blob/main/oltp.sql)) a pridám screenshot schémy dole.
 
 <img width="2207" height="842" alt="image" src="https://github.com/user-attachments/assets/3f88e05a-80d1-4fa2-863c-8545bc559c6a" />
 
@@ -77,7 +77,7 @@ Samostatná tabuľka `DimCategory` so vzťahom parent→child umožňuje čistej
    - Podľa **spôsobov platieb** – `FactTransactions` cez `DimPaymentMethod`.
 
 5. **Snowflake Schema in DWH**
-   - Schema bola vytvorena tiež na platforme [dbdiagram.io](https://dbdiagram.io/). Do repozitára vložím aj kód ([`dwh.sql`]()) a pridám screenshot schémy dole.
+   - Schema bola vytvorena tiež na platforme [dbdiagram.io](https://dbdiagram.io/). Do repozitára vložím aj kód ([`dwh.sql`](https://github.com/DariiaSira/CaseStudyDataAnalyst--GymBeam/blob/main/dwh.sql)) a pridám screenshot schémy dole.
 
 <img width="2124" height="902" alt="image" src="https://github.com/user-attachments/assets/7a3937b5-3f10-4a46-a070-d57e8cf17105" />
 
@@ -100,9 +100,9 @@ Samostatná tabuľka `DimCategory` so vzťahom parent→child umožňuje čistej
 
 #### Riešenie
 
-   - **`oltp.sql`** – operatívna (transakčná) schéma systému e-commerce. Obsahuje tabuľky pre produkty, kategórie, zákazníkov, objednávky, položky objednávok a transakcie. Táto časť predstavuje **source-of-truth** pre všetky obchodné dáta.
+   - [**`oltp.sql`**](https://github.com/DariiaSira/CaseStudyDataAnalyst--GymBeam/blob/main/oltp.sql) – operatívna (transakčná) schéma systému e-commerce. Obsahuje tabuľky pre produkty, kategórie, zákazníkov, objednávky, položky objednávok a transakcie. Táto časť predstavuje **source-of-truth** pre všetky obchodné dáta.
 
-   - **`dwh.sql`** – analytický dátový sklad (DWH) navrhnutý vo forme **snowflake**. Obsahuje faktové tabuľky (`FactSales`, `FactTransactions`) a dimenzie (`DimDate`, `DimProduct`, `DimCategory`, `DimCustomer`, `DimRegion`, `DimPaymentMethod`). Tento model je optimalizovaný pre reporting a umožňuje analýzu predajov podľa času, produktov, kategórií a regiónov.
+   - [**`dwh.sql`**](https://github.com/DariiaSira/CaseStudyDataAnalyst--GymBeam/blob/main/dwh.sql) – analytický dátový sklad (DWH) navrhnutý vo forme **snowflake**. Obsahuje faktové tabuľky (`FactSales`, `FactTransactions`) a dimenzie (`DimDate`, `DimProduct`, `DimCategory`, `DimCustomer`, `DimRegion`, `DimPaymentMethod`). Tento model je optimalizovaný pre reporting a umožňuje analýzu predajov podľa času, produktov, kategórií a regiónov.
 
 ### Dodatočná otázka na diskusiu
 - Ako by ste riešili **historické zmeny** (napr. zmena ceny produktu, adresa zákazníka)?
@@ -130,9 +130,9 @@ Najskôr som sa zaregistrovala na platforme Keboola, s ktorou som pracovala prv�
 
 <img width="1573" height="1207" alt="image" src="https://github.com/user-attachments/assets/44fc3f02-aed2-4d43-91ad-65571943131b" />
 
-Na časť Data Transformation som zvolila jazyk Python a kód som implementovala v prostredí Workspace – Jupyter Notebook. V tomto kroku som dáta načítala, skontrolovala a odstránila prázdne hodnoty (detailný postup je vysvetlený priamo v kóde). Po vyčistení som datasety uložila do výstupného adresára, aby mohli byť použité v ďalších úlohách.
+Na časť Data Transformation som zvolila jazyk Python a kód som implementovala v prostredí [Workspace – Jupyter Notebook](https://github.com/DariiaSira/CaseStudyDataAnalyst--GymBeam/blob/main/notebook.ipynb). V tomto kroku som dáta načítala, skontrolovala a odstránila prázdne hodnoty (detailný postup je vysvetlený priamo v kóde). Po vyčistení som datasety uložila do výstupného adresára, aby mohli byť použité v ďalších úlohách.
 
-Ako BI nástroj som pôvodne zvolila Power BI Service, avšak narazila som na problém s autorizáciou účtu. Troubleshooting a oboznámenie sa s novou platformou mi zabrali určitý čas, no keďže bolo pre mňa prioritou odovzdať zadanie načas, rozhodla som sa pokračovať v práci v lokálnej verzii Power BI Desktop. Finálny súbor s riešeniami vizualizácií prikladám v repozitári spolu s touto dokumentáciou.
+Ako BI nástroj som pôvodne zvolila Power BI Service, avšak narazila som na problém s autorizáciou účtu. Troubleshooting a oboznámenie sa s novou platformou mi zabrali určitý čas, no keďže bolo pre mňa prioritou odovzdať zadanie načas, rozhodla som sa pokračovať v práci v lokálnej verzii Power BI Desktop. Finálny [súbor](https://github.com/DariiaSira/CaseStudyDataAnalyst--GymBeam/blob/main/GymBeam.pbix) s riešeniami vizualizácií prikladám v repozitári spolu s touto dokumentáciou.
 
 <img width="927" height="987" alt="image" src="https://github.com/user-attachments/assets/96c42c70-3486-4a1c-a276-5d6c460e46f3" />
 <img width="1402" height="609" alt="image" src="https://github.com/user-attachments/assets/bafd5651-ce33-4805-956b-a5185e8f0f35" />
@@ -209,11 +209,13 @@ SUMX (
 
 Následne som pripravila metriku Avg Monthly Margin EUR, ktorá vracia priemernú mesačnú maržu pre každý produkt:
 
+```
 Avg Monthly Margin EUR =
 AVERAGEX (
     VALUES ( sales_order[YearMonth] ),
     [Total Margin EUR]
 )
+```
 
 Do reportu som pridala filter s vyhľadávaním produktov naľavo, v strede sa nachádza analýza vývoja marže v čase (line chart, kde na osi X bol YearMonth a na osi Y hodnota marže=, a napravo tabuľka priemernej mesačnej marže pre každý produkt zoradená od najvyššej hodnoty.
 
@@ -227,9 +229,23 @@ Do reportu som pridala filter s vyhľadávaním produktov naľavo, v strede sa n
 
 #### Riešenie
 
-Túto úlohu som riešila v Pythone (kód prikladám v repozitári). Najskôr som vyriešila kvalitu dát tým, že som odstránila riadky s chýbajúcim alebo „Unknown“ fk_item.
+Túto úlohu som riešila v Pythone [Task 2.4](https://github.com/DariiaSira/CaseStudyDataAnalyst--GymBeam/blob/main/Task2_4.ipynb). Najskôr som vyriešila kvalitu dát tým, že som odstránila riadky s chýbajúcim alebo „Unknown“ fk_item.
 Následne som aplikovala filtrovanie darčekov – produkty s cenou <= 0 som zo zoznamu vylúčila. Pre každú objednávku som vytvorila množinu produktov a z nej vygenerovala všetky možné dvojice (kombinácie po 2). Nakoniec som spočítala frekvenciu týchto dvojíc, vypočítala ich percentuálny podiel z objednávok a zostavila zoznam Top 10 najčastejšie predávaných dvojíc.
 
 <img width="978" height="443" alt="image" src="https://github.com/user-attachments/assets/ddaa992c-3629-40f4-86d8-3246c263898c" />
 
+## 3. Výkonnostný problém v SQL transformácii
 
+**Situácia:** Kolega nasadil SQL transformáciu do produkcie. Spočiatku fungovala dobre, no časom sa doba spracovania výrazne predĺžila.  
+**Úloha:**  
+- Identifikujte najčastejšie príčiny tohto správania.  
+- Navrhnite konkrétne, praktické kroky na odstránenie problému.
+
+#### Riešenie
+Najčastejšie príčiny, prečo SQL transformácia časom začína bežať pomalšie, v prvom rade ide o rast objemu dát: rovnaký dopyt, ktorý bol navrhnutý pre milióny riadkov, musí časom spracovávať desiatky či stovky miliónov. Druhým častým faktorom sú zastaralé štatistiky, v dôsledku ktorých optimalizátor nesprávne odhaduje selektivitu a vyberá nevýhodný plán. Dôležitá je aj fragmentácia indexov alebo úplná absencia indexov na kľúčových stĺpcoch, čo vedie k skenovaniu celej tabuľky. Taktiež parameter sniffing – situácia, keď sa do cache uloží nevhodný plán vykonania pre „zlý“ parameter, ako aj zmena distribúcie dát: napríklad skreslenie podľa kľúča, keď jeden klient alebo región sústreďuje väčšinu záznamov. Na pozadí týchto problémov sa prejavujú aj systémové obmedzenia: zápisy na disk pri nedostatku pamäte, nárast počtu blokovaní pri paralelnej záťaži a spomalenie spôsobené častým automatickým zväčšovaním dátových a logovacích súborov. Všetky tieto faktory spolu vysvetľujú efekt „degradácie“ výkonu.
+
+Na odstránenie problému musí byť prvým krokom vždy diagnostika. Je potrebné získať aktuálny plán vykonania dopytu a zistiť, ktoré operácie spotrebúvajú najviac času a zdrojov. Dôležité je skontrolovať zápisy na disk, konkurenciu o blokovania, využitie pamäte a správanie dátových a logovacích súborov. Porovnanie aktuálneho a historického plánu umožní odhaliť regresiu, napríklad prechod z indexovaného prístupu na plné skenovanie. Takáto analýza umožňuje presne určiť úzke miesto – nefunkčný index, nevhodný plán alebo jednoduchý nedostatok zdrojov.
+
+Nasledujú rýchle opatrenia. Vo väčšine prípadov postačí aktualizovať štatistiky a prestavať indexy, aby sa vrátili správne plány vykonania. Masové operácie aktualizácie alebo mazania je lepšie rozdeliť do dávok po niekoľko tisíc riadkov, aby sa znížilo zaťaženie blokovaniami a logmi. Pri náročných triedeniach a agregáciách pomáha použitie dočasných tabuliek a vytváranie pokrývajúcich indexov práve pre daný krok. Filtre sa odporúča prepisovať do rozsahov, vyhýbať sa funkciám na stĺpcoch. Pre veľké tabuľky sa osvedčuje particionovanie podľa dátumov alebo stavov. Takéto kroky môžu výrazne skrátiť čas vykonania bez radikálnej úpravy kódu.
+
+Dlhodobý výsledok sa dosahuje pravidelnou údržbou a architektonickými zmenami. Je potrebné nastaviť automatickú aktualizáciu štatistík a správu indexov, ako aj presunúť „studené“ dáta do archívnych tabuliek. Pre stabilitu je nutné zaviesť monitoring: upozornenia na nárast času vykonania, zápisy na disk a neočakávané zmeny plánov. Dôležité je aj procesne zabezpečiť, aby každý nový SQL dopyt bol kontrolovaný pred nasadením a testovaný na reálnych objemoch dát. Pri ďalšom raste záťaže sa oplatí zvážiť architektonické opatrenia: inkrementálne načítanie namiesto plného prepočtu, staging zóny na prípravu dát alebo presun historických vrstiev do samostatného úložiska. Takýto prístup umožňuje nielen odstrániť aktuálnu degradáciu, ale aj vybudovať stabilnú a predvídateľnú prevádzku systému do budúcnosti.
