@@ -123,30 +123,113 @@ Vašou úlohou bude spracovať vzorové tabuľky z prostredia e-commerce, dopoč
 
 ### Použité nástroje
 - **ETL nástroj:** [Keboola](https://help.keboola.com/) – nahratie a transformácia dát (SQL / Python),  
-- **BI nástroj:** vami zvolený (bezplatný účet), určený na vizualizáciu výsledkov.  
+- **BI nástroj:** vami zvolený (bezplatný účet), určený na vizualizáciu výsledkov.
+
+#### Riešenie
+Najskôr som sa zaregistrovala na platforme Keboola, s ktorou som pracovala prvýkrát. Keďže vstupné dáta boli poskytnuté vo formáte CSV, nastavila som komponent CSV Import a nahrala som tam pripravené datasety.
+
+<img width="1573" height="1207" alt="image" src="https://github.com/user-attachments/assets/44fc3f02-aed2-4d43-91ad-65571943131b" />
+
+Na časť Data Transformation som zvolila jazyk Python a kód som implementovala v prostredí Workspace – Jupyter Notebook. V tomto kroku som dáta načítala, skontrolovala a odstránila prázdne hodnoty (detailný postup je vysvetlený priamo v kóde). Po vyčistení som datasety uložila do výstupného adresára, aby mohli byť použité v ďalších úlohách.
+
+Ako BI nástroj som pôvodne zvolila Power BI Service, avšak narazila som na problém s autorizáciou účtu. Troubleshooting a oboznámenie sa s novou platformou mi zabrali určitý čas, no keďže bolo pre mňa prioritou odovzdať zadanie načas, rozhodla som sa pokračovať v práci v lokálnej verzii Power BI Desktop. Finálny súbor s riešeniami vizualizácií prikladám v repozitári spolu s touto dokumentáciou.
+
+<img width="927" height="987" alt="image" src="https://github.com/user-attachments/assets/96c42c70-3486-4a1c-a276-5d6c460e46f3" />
+<img width="1402" height="609" alt="image" src="https://github.com/user-attachments/assets/bafd5651-ce33-4805-956b-a5185e8f0f35" />
+
 
 ### 2.1. Doplniť názov mesta k objednávke
 - V dátach chýba názov mesta, k dispozícii je iba PSČ.  
 - Doplniť názov mesta k objednávkam (napr. pomocou externej knižnice alebo datasetu).  
 - Vizualizovať:  
-  - **TOP 20 miest** vo forme tabuľky podľa metriky **AOV (Average Order Value)**,  
-  - **mapu** s počtom vytvorených objednávok z jednotlivých miest.  
+  - **TOP 20 miest** vo forme tabuľky podľa metriky **AOV (Average Order Value)**,
+  - **mapu** s počtom vytvorených objednávok z jednotlivých miest.
+
+#### Riešenie
+V pôvodných dátach sa nachádzal iba poštový kód (PSČ), preto som pripravila externý dataset na mapovanie postal_code → city a doplnila názov mesta ku každej objednávke.
+<img width="800" height="807" alt="image" src="https://github.com/user-attachments/assets/ce3cb2cb-d78c-466a-b902-70ce46ea39d7" />
+
+Po doplnení som prepojila tabuľky sales_order a sales_items a vytvorila základné metriky:
+```
+-- Celkový predaj v EUR
+Total Sales EUR =
+SUMX (
+    sales_items,
+    sales_items[sold_qty] *
+    sales_items[product_price_local_currency] *
+    RELATED ( sales_order[currency_rate] )
+)
+
+-- Počet objednávok
+Orders Count =
+DISTINCTCOUNT ( sales_order[pk_sales_order] )
+
+-- Priemerná hodnota objednávky (AOV)
+AOV =
+DIVIDE ( [Total Sales EUR], [Orders Count] )
+
+```
+<img width="1781" height="969" alt="image" src="https://github.com/user-attachments/assets/fc39660e-3081-4c30-844d-3367b58cdedf" />
+
 
 ### 2.2. Nová kamenná predajňa
 - GymBeam má aktuálne predajne v **Košiciach, Budapešti a Prahe**.  
 - Na základe vzorky dát (prípadne doplnkových datasetov) určiť vhodnú lokalitu pre **novú predajňu**.  
 - Vysvetliť dôvody výberu mesta.  
-- Výstup nie je nutné vizualizovať v BI nástroji.  
+- Výstup nie je nutné vizualizovať v BI nástroji.
+  
+#### Riešenie
 
+Na základe datasetu postal_code → city som analyzovala objednávky podľa miest. Predajne GymBeam sa už nachádzajú v Košiciach, Budapešti a Prahe, preto som tieto lokality zo zoznamu vylúčila. Porovnala som mestá podľa počtu objednávok a identifikovala najvýkonnejšie lokality. Ukázalo sa, že Žilina patrí medzi mestá s najvyšším počtom objednávok mimo existujúcich predajní. Tento výsledok naznačuje silný dopyt po produktoch a atraktívny potenciál pre retail. Preto som zvolila Žilinu ako vhodnú lokalitu pre novú kamennú predajňu GymBeam.
+
+<img width="1766" height="1003" alt="image" src="https://github.com/user-attachments/assets/0743f26c-6af3-4191-9fb0-7efd00896991" />
 
 ### 2.3. Vypočítať priemernú mesačnú maržu produktu
 - Vypočítať **priemernú mesačnú maržu** pre každý produkt.  
-- Vizualizovať vývoj marže v čase s možnosťou filtrovať konkrétny produkt.  
+- Vizualizovať vývoj marže v čase s možnosťou filtrovať konkrétny produkt.
+  
+#### Riešenie
+
+Najskôr som si pripravila dátumový stĺpec YearMonth, aby som mohla analyzovať maržu v mesačnom rozdelení:
+
+```
+YearMonth = FORMAT ( sales_order[created_at], "YYYY-MM" )
+```
+
+Na výpočet marže som vytvorila metriku Total Margin EUR, ktorá počíta rozdiel medzi výnosom a nákladom:
+
+```
+Total Margin EUR =
+SUMX (
+    sales_items,
+    sales_items[sold_qty] * sales_items[product_price_local_currency] * RELATED ( sales_order[currency_rate] )
+    - sales_items[sold_qty] * sales_items[product_cost_eur]
+)
+```
+
+Následne som pripravila metriku Avg Monthly Margin EUR, ktorá vracia priemernú mesačnú maržu pre každý produkt:
+
+Avg Monthly Margin EUR =
+AVERAGEX (
+    VALUES ( sales_order[YearMonth] ),
+    [Total Margin EUR]
+)
+
+Do reportu som pridala filter s vyhľadávaním produktov naľavo, v strede sa nachádza analýza vývoja marže v čase (line chart, kde na osi X bol YearMonth a na osi Y hodnota marže=, a napravo tabuľka priemernej mesačnej marže pre každý produkt zoradená od najvyššej hodnoty.
+
+<img width="1786" height="1005" alt="image" src="https://github.com/user-attachments/assets/3db3d537-936e-46dd-b0b3-d65cbbac9138" />
 
 ### 2.4. Vypočítať najpredávanejšie dvojice produktov
 - Identifikovať **najčastejšie predávané dvojice produktov** v rámci jednej objednávky.  
 - Do dvojíc nezapočítavať produkty pridané ako darček.  
 - Poskytnúť zoznam **TOP 10 dvojíc** spolu s percentuálnym podielom objednávok, kde sa tieto dvojice vyskytli.  
 - Vizualizácia v BI nie je nutná.  
+
+#### Riešenie
+
+Túto úlohu som riešila v Pythone (kód prikladám v repozitári). Najskôr som vyriešila kvalitu dát tým, že som odstránila riadky s chýbajúcim alebo „Unknown“ fk_item.
+Následne som aplikovala filtrovanie darčekov – produkty s cenou <= 0 som zo zoznamu vylúčila. Pre každú objednávku som vytvorila množinu produktov a z nej vygenerovala všetky možné dvojice (kombinácie po 2). Nakoniec som spočítala frekvenciu týchto dvojíc, vypočítala ich percentuálny podiel z objednávok a zostavila zoznam Top 10 najčastejšie predávaných dvojíc.
+
+<img width="978" height="443" alt="image" src="https://github.com/user-attachments/assets/ddaa992c-3629-40f4-86d8-3246c263898c" />
 
 
